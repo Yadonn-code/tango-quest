@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>単語クエスト 〜Jと戸塚の試練〜</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-title">
+<div id="app">
+
+  <!-- HUD（クイズ中のみ表示） -->
+  <header id="hud" class="hidden">
+    <div id="hud-top">
+      <span id="hud-stage"></span>
+      <span id="hud-diff" class="tag"></span>
+      <span id="hud-q"></span>
+    </div>
+    <div id="hp-wrap">
+      <div id="hp-bar"><div id="hp-fill"></div></div>
+      <span id="hp-text"></span>
+    </div>
+  </header>
+
+  <!-- タイトル画面 -->
+  <section id="screen-title" class="screen active">
+    <p class="small-cap">WORD QUEST</p>
+    <h1>単語クエスト</h1>
+    <p class="subtitle">〜Jと戸塚の試練〜</p>
+    <p class="lore">
+      英単語の力で5つのステージを踏破する冒険。<br>
+      まちがえると <span class="c-j">😎 J</span> と <span class="c-t">👹 戸塚</span> に殴られる。<br>
+      HPが尽きたら、セーブポイントに逆戻り——。
+    </p>
+    <div class="btn-col">
+      <button id="btn-continue" class="btn hidden"></button>
+      <button id="btn-new" class="btn primary">はじめから</button>
+    </div>
+  </section>
+
+  <!-- 難易度選択 -->
+  <section id="screen-diff" class="screen">
+    <h2>難易度をえらべ</h2>
+    <div class="btn-col wide">
+      <button class="btn diff-btn" data-diff="easy">
+        <b>🌱 イージー</b>
+        <span>😎 J のパンチ -10 ／ 👹 戸塚のパンチ -20<br>🚩 セーブポイント：全ステージ</span>
+      </button>
+      <button class="btn diff-btn" data-diff="normal">
+        <b>⚔️ ノーマル</b>
+        <span>😎 J のパンチ -15 ／ 👹 戸塚のパンチ -35<br>🚩 セーブポイント：ステージ 1・3・5</span>
+      </button>
+      <button class="btn diff-btn" data-diff="hard">
+        <b>🔥 ハード</b>
+        <span>😎 J のパンチ -30 ／ 👹 戸塚のパンチ -60<br>🚩 セーブポイント：ステージ 1 のみ（死んだら最初から）</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- マップ（冒険画面） -->
+  <section id="screen-map" class="screen">
+    <h2 id="map-title"></h2>
+    <div id="map-path"></div>
+    <p id="map-msg"></p>
+    <button id="btn-start-stage" class="btn primary"></button>
+  </section>
+
+  <!-- クイズ画面 -->
+  <section id="screen-quiz" class="screen">
+    <div id="enemies">
+      <span class="enemy">😎 J <em id="dmg-j"></em></span>
+      <span class="enemy">👹 戸塚 <em id="dmg-t"></em></span>
+    </div>
+    <p class="quiz-label">この単語の意味は？</p>
+    <div id="question-word"></div>
+    <div id="choices"></div>
+    <p id="feedback">&nbsp;</p>
+  </section>
+
+  <!-- ステージクリア -->
+  <section id="screen-clear" class="screen">
+    <h2 id="clear-title"></h2>
+    <p id="clear-detail"></p>
+    <button id="btn-clear-next" class="btn primary">マップへもどる</button>
+  </section>
+
+  <!-- ゲームオーバー -->
+  <section id="screen-dead" class="screen">
+    <div id="dead-face"></div>
+    <h2>気絶した……</h2>
+    <p id="dead-msg"></p>
+    <button id="btn-respawn" class="btn primary"></button>
+  </section>
+
+  <!-- エンディング -->
+  <section id="screen-ending" class="screen">
+    <p class="small-cap">GAME CLEAR</p>
+    <h2>🎉 全ステージ制覇！</h2>
+    <p id="ending-title-badge"></p>
+    <p id="ending-stats"></p>
+    <button id="btn-ending-title" class="btn primary">タイトルへもどる</button>
+  </section>
+
+</div>
+
+<!-- パンチ演出オーバーレイ -->
+<div id="punch-overlay" class="hidden">
+  <div id="punch-face"></div>
+  <div id="punch-name"></div>
+  <div id="punch-dmg"></div>
+  <div id="punch-fist">👊</div>
+</div>
+<div id="flash"></div>
+
+<script src="words.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,293 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "DotGothic16", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  background: #0b1020;
+  color: #f5f5f4;
+  min-height: 100vh;
+  line-height: 1.7;
+}
+
+/* ---------- テーマ（ステージごとの背景） ---------- */
+body.theme-title  { background: linear-gradient(180deg, #0b1020, #1a1033); }
+body.theme-map    { background: linear-gradient(180deg, #101828, #0b2434); }
+body.theme-grass  { background: linear-gradient(180deg, #0c2214, #14381f); }
+body.theme-forest { background: linear-gradient(180deg, #071a10, #0d2b16); }
+body.theme-cave   { background: linear-gradient(180deg, #121212, #26221c); }
+body.theme-snow   { background: linear-gradient(180deg, #12233d, #2c4a6b); }
+body.theme-castle { background: linear-gradient(180deg, #170b24, #3b0f2e); }
+body.theme-dead   { background: linear-gradient(180deg, #1a0505, #3d0a0a); }
+body.theme-ending { background: linear-gradient(180deg, #1c2405, #3a3305); }
+
+#app {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.hidden { display: none !important; }
+
+/* ---------- HUD ---------- */
+#hud {
+  border: 3px solid #ffffff44;
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  background: #00000055;
+}
+#hud-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+}
+#hud-q { margin-left: auto; }
+.tag {
+  border: 2px solid #fbbf24;
+  color: #fbbf24;
+  border-radius: 6px;
+  padding: 0 8px;
+  font-size: 0.8rem;
+}
+#hp-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+#hp-bar {
+  flex: 1;
+  height: 18px;
+  border: 2px solid #ffffff88;
+  border-radius: 9px;
+  overflow: hidden;
+  background: #00000088;
+}
+#hp-fill {
+  height: 100%;
+  width: 100%;
+  background: #4ade80;
+  transition: width 0.35s;
+}
+#hp-fill.mid { background: #facc15; }
+#hp-fill.low { background: #ef4444; }
+#hp-text { font-size: 0.9rem; white-space: nowrap; }
+
+/* ---------- 画面共通 ---------- */
+.screen {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 18px;
+  padding: 20px 0;
+}
+.screen.active { display: flex; }
+
+h1 { font-size: 2.6rem; letter-spacing: 0.1em; }
+h2 { font-size: 1.6rem; }
+.small-cap { letter-spacing: 0.4em; color: #fbbf24; font-size: 0.85rem; }
+.subtitle { color: #fda4af; }
+.lore { color: #d6d3d1; font-size: 0.95rem; }
+.c-j { color: #7dd3fc; }
+.c-t { color: #fca5a5; }
+
+/* ---------- ボタン ---------- */
+.btn {
+  font-family: inherit;
+  font-size: 1.05rem;
+  color: #f5f5f4;
+  background: #ffffff12;
+  border: 3px solid #ffffff55;
+  border-radius: 12px;
+  padding: 12px 26px;
+  cursor: pointer;
+  transition: transform 0.1s, background 0.15s;
+}
+.btn:hover { background: #ffffff28; transform: translateY(-2px); }
+.btn:active { transform: translateY(1px); }
+.btn.primary { border-color: #fbbf24; color: #fbbf24; }
+.btn-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 340px;
+}
+.btn-col.wide { max-width: 460px; }
+.diff-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: center;
+}
+.diff-btn b { font-size: 1.2rem; }
+.diff-btn span { font-size: 0.85rem; color: #d6d3d1; }
+
+/* ---------- マップ ---------- */
+#map-path {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.map-node {
+  border: 3px solid #ffffff44;
+  border-radius: 12px;
+  padding: 10px 8px;
+  width: 108px;
+  background: #00000055;
+}
+.map-node.current {
+  border-color: #fbbf24;
+  box-shadow: 0 0 14px #fbbf2488;
+}
+.map-node.cleared { opacity: 0.75; }
+.map-node.locked { opacity: 0.4; }
+.node-icon { font-size: 1.8rem; }
+.node-no { font-size: 0.7rem; color: #fbbf24; }
+.node-name { font-size: 0.75rem; min-height: 2.2em; }
+.node-mark { font-size: 1rem; min-height: 1.5em; }
+.map-arrow { color: #ffffff66; }
+#map-msg { color: #d6d3d1; min-height: 3em; }
+
+/* ---------- クイズ ---------- */
+#enemies {
+  display: flex;
+  gap: 24px;
+  font-size: 1.05rem;
+}
+.enemy em {
+  font-style: normal;
+  color: #f87171;
+  font-size: 0.85rem;
+}
+.quiz-label { color: #a8a29e; font-size: 0.9rem; }
+#question-word {
+  font-size: 3rem;
+  letter-spacing: 0.06em;
+  border: 3px solid #ffffff44;
+  border-radius: 16px;
+  padding: 18px 40px;
+  background: #00000055;
+  min-width: 60%;
+}
+#choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  max-width: 520px;
+}
+.choice {
+  font-family: inherit;
+  font-size: 1.05rem;
+  color: #f5f5f4;
+  background: #ffffff12;
+  border: 3px solid #ffffff55;
+  border-radius: 12px;
+  padding: 14px 10px;
+  cursor: pointer;
+}
+.choice:hover:not(:disabled) { background: #ffffff28; }
+.choice:disabled { cursor: default; }
+.choice.is-correct { background: #166534; border-color: #22c55e; }
+.choice.is-wrong { background: #7f1d1d; border-color: #ef4444; }
+#feedback { font-size: 1.2rem; min-height: 2em; }
+
+/* ---------- 死亡・エンディング ---------- */
+#dead-face { font-size: 5rem; }
+#ending-title-badge { font-size: 1.3rem; color: #fbbf24; }
+#ending-stats { color: #d6d3d1; }
+
+/* ---------- パンチ演出 ---------- */
+#punch-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  z-index: 50;
+}
+#punch-overlay.totsuka { background: rgba(45, 0, 0, 0.9); }
+#punch-face { font-size: 6rem; }
+#punch-name { font-size: 1.5rem; }
+#punch-dmg {
+  font-size: 3.4rem;
+  color: #f87171;
+  min-height: 1.4em;
+}
+#punch-dmg.pop { animation: dmgPop 0.5s ease-out; }
+@keyframes dmgPop {
+  0% { transform: scale(0.2); opacity: 0; }
+  40% { transform: scale(1.7); opacity: 1; }
+  100% { transform: scale(1); }
+}
+#punch-fist {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  font-size: 6rem;
+  transform: translate(-50%, -50%) scale(0);
+  z-index: 51;
+  pointer-events: none;
+}
+#punch-fist.go { animation: fistIn 0.32s cubic-bezier(0.2, 0.7, 0.3, 1) forwards; }
+@keyframes fistIn {
+  0% { transform: translate(140%, 140%) scale(0.4) rotate(-50deg); opacity: 0.2; }
+  100% { transform: translate(-50%, -50%) scale(2.4) rotate(0deg); opacity: 1; }
+}
+
+/* ---------- 画面シェイク・フラッシュ ---------- */
+body.shake { animation: shake 0.4s; }
+body.shake-hard { animation: shakeHard 0.6s; }
+@keyframes shake {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-8px, 4px); }
+  40% { transform: translate(8px, -4px); }
+  60% { transform: translate(-6px, -3px); }
+  80% { transform: translate(6px, 3px); }
+}
+@keyframes shakeHard {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-16px, 8px); }
+  30% { transform: translate(14px, -10px); }
+  50% { transform: translate(-12px, -8px); }
+  70% { transform: translate(12px, 8px); }
+  90% { transform: translate(-8px, 4px); }
+}
+#flash {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 0, 0, 0.3), rgba(255, 0, 0, 0.6));
+  opacity: 0;
+  z-index: 60;
+}
+#flash.hit { animation: flashHit 0.45s ease-out; }
+@keyframes flashHit {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ---------- スマホ対応 ---------- */
+@media (max-width: 480px) {
+  h1 { font-size: 2rem; }
+  #question-word { font-size: 2.2rem; padding: 14px 20px; }
+  #choices { grid-template-columns: 1fr; }
+  .map-node { width: 90px; }
+}
