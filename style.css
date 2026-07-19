@@ -188,7 +188,7 @@ h2 { font-size: 1.6rem; }
   font-size: 0.85rem;
 }
 .quiz-label { color: #a8a29e; font-size: 0.9rem; }
-#question-word {
+#question-word, #drill-word {
   font-size: 3rem;
   letter-spacing: 0.06em;
   border: 3px solid #ffffff44;
@@ -256,7 +256,11 @@ h2 { font-size: 1.6rem; }
 }
 #punch-role:empty { display: none; }
 #punch-face { font-size: 6rem; }
-#punch-name { font-size: 1.5rem; }
+#punch-name {
+  font-size: 1.5rem;
+  max-width: 92%;
+  text-shadow: 0 2px 8px #000;
+}
 #punch-dmg {
   font-size: 3.4rem;
   color: #f87171;
@@ -281,6 +285,12 @@ h2 { font-size: 1.6rem; }
 @keyframes fistIn {
   0% { transform: translate(140%, 140%) scale(0.4) rotate(-50deg); opacity: 0.2; }
   100% { transform: translate(-50%, -50%) scale(2.4) rotate(0deg); opacity: 1; }
+}
+/* 着弾後はこぶしをフェードアウトさせて、後ろのセリフを見えるようにする */
+#punch-fist.go.out { animation: fistOut 0.35s ease-out forwards; }
+@keyframes fistOut {
+  0% { transform: translate(-50%, -50%) scale(2.4); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(3.4); opacity: 0; }
 }
 
 /* ---------- 画面シェイク・フラッシュ ---------- */
@@ -315,10 +325,73 @@ body.shake-hard { animation: shakeHard 0.6s; }
   100% { opacity: 0; }
 }
 
+/* ---------- 一問一答モード ---------- */
+a.btn {
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+.drill-count {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.drill-count b { font-size: 1.2rem; }
+.drill-count span { font-size: 0.85rem; color: #d6d3d1; }
+#drill-stats { font-size: 1.05rem; color: #fbbf24; }
+#drill-answer-slot {
+  min-height: 4.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+#drill-answer {
+  font-size: 1.5rem;
+  color: #4ade80;
+  border: 3px solid #22c55e88;
+  border-radius: 12px;
+  padding: 8px 24px;
+  background: #052e1655;
+  max-width: 92%;
+}
+#drill-controls {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#drill-judge { display: flex; gap: 14px; }
+.judge.ok { border-color: #22c55e; color: #86efac; }
+.judge.ng { border-color: #ef4444; color: #fca5a5; }
+.drill-hint { color: #a8a29e; font-size: 0.8rem; }
+.btn.small { font-size: 0.85rem; padding: 8px 16px; opacity: 0.8; }
+#miss-box { width: 100%; max-width: 520px; }
+.miss-label { color: #fca5a5; margin-bottom: 6px; }
+#miss-list {
+  max-height: 220px;
+  overflow-y: auto;
+  border: 3px solid #ffffff33;
+  border-radius: 12px;
+  background: #00000055;
+  padding: 10px 14px;
+  text-align: left;
+}
+.miss-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #ffffff1a;
+  padding: 4px 0;
+}
+.miss-row:last-child { border-bottom: none; }
+.miss-row b { color: #7dd3fc; }
+.miss-row span { color: #d6d3d1; }
+
 /* ---------- スマホ対応 ---------- */
 @media (max-width: 480px) {
   h1 { font-size: 2rem; }
-  #question-word { font-size: 2.2rem; padding: 14px 20px; }
+  #question-word, #drill-word { font-size: 2.2rem; padding: 14px 20px; }
   #choices { grid-template-columns: 1fr; }
   .map-node { width: 90px; }
 }

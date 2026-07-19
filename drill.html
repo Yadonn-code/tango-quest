@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一問一答モード - Jと戸塚からの体罰を避けろ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-map">
+<div id="app">
+
+  <!-- 設定画面 -->
+  <section id="drill-setup" class="screen active">
+    <p class="small-cap">QUICK DRILL</p>
+    <h1>📖 一問一答モード</h1>
+    <p class="lore">
+      単語を見て意味を思い浮かべたら「こたえを見る」。<br>
+      自分で ⭕ / ❌ をつけるシンプル暗記モード。<br>
+      体罰はない。あるのは自分との戦いだけ——。
+    </p>
+    <div class="btn-col wide">
+      <button class="btn drill-count" data-count="10"><b>🌱 10問</b><span>サクッと肩ならし</span></button>
+      <button class="btn drill-count" data-count="25"><b>⚔️ 25問</b><span>じっくり特訓</span></button>
+      <button class="btn drill-count" data-count="50"><b>🔥 50問</b><span>本気の走り込み</span></button>
+      <button class="btn drill-count" data-count="all"><b>♾️ エンドレス</b><span>全単語ランダム・いつでも終了OK</span></button>
+    </div>
+    <a class="btn" href="index.html">🗡️ クエストにもどる</a>
+  </section>
+
+  <!-- 出題画面 -->
+  <section id="drill-play" class="screen">
+    <div id="drill-stats"></div>
+    <p class="quiz-label">この単語の意味は？</p>
+    <div id="drill-word"></div>
+    <div id="drill-answer-slot"><div id="drill-answer" class="hidden"></div></div>
+    <div id="drill-controls">
+      <button id="btn-reveal" class="btn primary">💡 こたえを見る</button>
+      <div id="drill-judge" class="hidden">
+        <button id="btn-ok" class="btn judge ok">⭕ わかった</button>
+        <button id="btn-ng" class="btn judge ng">❌ わからん</button>
+      </div>
+    </div>
+    <p class="drill-hint">キーボード：スペース＝こたえ ／ 1＝⭕ ／ 2＝❌</p>
+    <button id="btn-quit" class="btn small">おわって結果を見る</button>
+  </section>
+
+  <!-- 結果画面 -->
+  <section id="drill-result" class="screen">
+    <p class="small-cap">RESULT</p>
+    <h2 id="result-title"></h2>
+    <p id="result-stats"></p>
+    <div id="miss-box" class="hidden">
+      <p class="miss-label">❌だった単語</p>
+      <div id="miss-list"></div>
+    </div>
+    <div class="btn-col">
+      <button id="btn-review" class="btn primary hidden"></button>
+      <button id="btn-again" class="btn">もう一回</button>
+      <a class="btn" href="index.html">🗡️ クエストにもどる</a>
+    </div>
+  </section>
+
+</div>
+<script src="words.js"></script>
+<script src="drill.js"></script>
+</body>
+</html>

@@ -302,13 +302,14 @@ function doPunch() {
   ov.classList.remove("hidden");
 
   const fist = $("punch-fist");
-  fist.classList.remove("go");
+  fist.classList.remove("go", "out");
   void fist.offsetWidth;
   fist.classList.add("go");
   if (isJ) sfx.punchJ();
   else sfx.punchT();
 
   setTimeout(() => {
+    fist.classList.add("out"); // 着弾後はこぶしを消してセリフを見えるようにする
     state.hp = Math.max(0, state.hp - dmg);
     updateHud();
     dmgEl.textContent = `-${dmg}`;
@@ -327,7 +328,7 @@ function doPunch() {
     document.body.classList.remove("shake", "shake-hard");
     if (state.hp <= 0) onDead(atk);
     else nextQuestion();
-  }, 1550);
+  }, 2000);
 }
 function triggerFlash() {
   const f = $("flash");
