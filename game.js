@@ -18,16 +18,59 @@ const DIFFS = {
   hard:   { key: "hard",   name: "ハード",   jDmg: 30, tDmg: 60, saves: [1] },
 };
 
+const FACE_J = `<svg viewBox="0 0 100 100" role="img" aria-label="J">
+  <circle cx="50" cy="58" r="33" fill="#f2c9a0"/>
+  <path d="M18 44 a32 24 0 0 1 64 0 z" fill="#2563eb"/>
+  <rect x="13" y="42" width="74" height="9" rx="4.5" fill="#1e40af"/>
+  <text x="50" y="38" font-size="17" fill="#fff" text-anchor="middle" font-weight="bold" font-family="sans-serif">J</text>
+  <rect x="27" y="56" width="19" height="10" rx="3" fill="#111"/>
+  <rect x="54" y="56" width="19" height="10" rx="3" fill="#111"/>
+  <rect x="46" y="59" width="8" height="3" fill="#111"/>
+  <path d="M38 78 q12 8 24 -2" stroke="#7c2d12" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+</svg>`;
+
+const FACE_TOTSUKA = `<svg viewBox="0 0 100 100" role="img" aria-label="戸塚">
+  <circle cx="50" cy="60" r="33" fill="#e8b48c"/>
+  <path d="M17 62 q-3 -18 8 -27 l7 9 z" fill="#e5e7eb"/>
+  <path d="M83 62 q3 -18 -8 -27 l-7 9 z" fill="#e5e7eb"/>
+  <path d="M15 42 q35 -28 70 0 l-3 6 H18 z" fill="#f8fafc"/>
+  <rect x="15" y="46" width="70" height="9" rx="4" fill="#0f172a"/>
+  <text x="50" y="41" font-size="13" text-anchor="middle">⚓</text>
+  <path d="M26 58 l18 7" stroke="#4b5563" stroke-width="5" stroke-linecap="round"/>
+  <path d="M74 58 l-18 7" stroke="#4b5563" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="37" cy="71" r="8" fill="none" stroke="#111" stroke-width="2.5"/>
+  <circle cx="63" cy="71" r="8" fill="none" stroke="#111" stroke-width="2.5"/>
+  <line x1="45" y1="71" x2="55" y2="71" stroke="#111" stroke-width="2.5"/>
+  <circle cx="37" cy="71" r="2.5" fill="#111"/>
+  <circle cx="63" cy="71" r="2.5" fill="#111"/>
+  <path d="M38 85 q12 -7 24 0 q-12 10 -24 0 z" fill="#7f1d1d"/>
+  <path d="M79 28 l6 -8 M86 31 l8 -6 M84 20 l4 -8" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+</svg>`;
+
+// 自作イラストなど、権利上問題のない画像に差し替えたい場合はファイル名を指定する
+// 例: const CUSTOM_FACES = { j: null, totsuka: "totsuka.png" };
+const CUSTOM_FACES = { j: null, totsuka: null };
+
 const ATTACKERS = {
   j: {
-    key: "j", name: "J", face: "😎",
-    hitLines: ["Jのパンチ！", "Jのジャブが刺さる！", "J「単語くらい覚えろよ」"],
+    key: "j", name: "J", face: FACE_J, role: "",
+    hitLines: ["Jの体罰！ビンタが飛んだ！", "Jのジャブが刺さる！", "J「単語くらい覚えろよ」"],
   },
   totsuka: {
-    key: "totsuka", name: "戸塚", face: "👹",
-    hitLines: ["戸塚の鉄拳！！", "戸塚のフルスイング！！", "戸塚「その程度か？」"],
+    key: "totsuka", name: "戸塚", face: FACE_TOTSUKA, role: "戸塚ヨットスクール 校長",
+    hitLines: [
+      "戸塚の鉄拳制裁！！",
+      "戸塚「体罰は教育だ！！」",
+      "戸塚「理性は悪なんよ」",
+      "戸塚「ヨットで性根を叩き直せ！」",
+    ],
   },
 };
+
+function faceHTML(atk) {
+  const img = CUSTOM_FACES[atk.key];
+  return img ? `<img class="face-img" src="${img}" alt="${atk.name}">` : atk.face;
+}
 
 const $ = (id) => document.getElementById(id);
 
@@ -180,7 +223,12 @@ function makeQuestions() {
   const picked = shuffle(pool).slice(0, Q_PER_STAGE);
   picked.forEach((w) => state.used.add(w.en));
   return picked.map((w) => {
-    const wrongs = shuffle(WORDS.filter((x) => x.ja !== w.ja)).slice(0, 3).map((x) => x.ja);
+    // 意味（ja）が同じ単語が複数あるため、選択肢の文字列が重複しないように選ぶ
+    const wrongs = [];
+    for (const x of shuffle(WORDS)) {
+      if (x.ja !== w.ja && !wrongs.includes(x.ja)) wrongs.push(x.ja);
+      if (wrongs.length === 3) break;
+    }
     return { en: w.en, ja: w.ja, choices: shuffle([w.ja, ...wrongs]) };
   });
 }
@@ -245,7 +293,8 @@ function doPunch() {
   else state.stats.tHits++;
 
   const ov = $("punch-overlay");
-  $("punch-face").textContent = atk.face;
+  $("punch-face").innerHTML = faceHTML(atk);
+  $("punch-role").textContent = atk.role;
   $("punch-name").textContent = atk.hitLines[Math.floor(Math.random() * atk.hitLines.length)];
   const dmgEl = $("punch-dmg");
   dmgEl.textContent = "";
@@ -292,7 +341,7 @@ function onDead(atk) {
   state.stats.deaths++;
   sfx.dead();
   setTheme("theme-dead");
-  $("dead-face").textContent = atk.face;
+  $("dead-face").innerHTML = faceHTML(atk);
   $("dead-msg").innerHTML = `${atk.name}の一撃で意識が飛んだ……<br>気がつくとセーブポイントにいた。`;
   $("btn-respawn").textContent = `🚩 ステージ${state.saveStage}からやり直す`;
   showScreen("screen-dead");
@@ -345,14 +394,17 @@ function ending() {
   $("ending-title-badge").textContent = `称号：${title}`;
   $("ending-stats").innerHTML =
     `正解率：${acc}%（${s.correct}/${total}問）<br>` +
-    `😎 Jに殴られた回数：${s.jHits}回<br>` +
-    `👹 戸塚に殴られた回数：${s.tHits}回<br>` +
+    `Jから受けた体罰：${s.jHits}回<br>` +
+    `戸塚から受けた体罰：${s.tHits}回<br>` +
     `💀 死亡回数：${s.deaths}回`;
   showScreen("screen-ending");
 }
 
 // ---------- イベント登録 ----------
 window.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("[data-face]").forEach((el) => {
+    el.innerHTML = faceHTML(ATTACKERS[el.dataset.face]);
+  });
   $("btn-new").onclick = () => { ensureAudio(); showScreen("screen-diff"); };
   $("btn-continue").onclick = () => {
     ensureAudio();

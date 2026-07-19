@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>単語クエスト 〜Jと戸塚の試練〜</title>
+<title>Jと戸塚からの体罰を避けろ ～理性は悪なんよ～</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
@@ -28,11 +28,15 @@
   <!-- タイトル画面 -->
   <section id="screen-title" class="screen active">
     <p class="small-cap">WORD QUEST</p>
-    <h1>単語クエスト</h1>
-    <p class="subtitle">〜Jと戸塚の試練〜</p>
+    <h1>Jと戸塚からの<br>体罰を避けろ</h1>
+    <p class="subtitle">～理性は悪なんよ～</p>
+    <div id="title-faces">
+      <span class="title-face" data-face="j"></span>
+      <span class="title-face" data-face="totsuka"></span>
+    </div>
     <p class="lore">
       英単語の力で5つのステージを踏破する冒険。<br>
-      まちがえると <span class="c-j">😎 J</span> と <span class="c-t">👹 戸塚</span> に殴られる。<br>
+      まちがえると <span class="c-j">J</span> と <span class="c-t">戸塚</span> の体罰が飛んでくる。<br>
       HPが尽きたら、セーブポイントに逆戻り——。
     </p>
     <div class="btn-col">
@@ -47,15 +51,15 @@
     <div class="btn-col wide">
       <button class="btn diff-btn" data-diff="easy">
         <b>🌱 イージー</b>
-        <span>😎 J のパンチ -10 ／ 👹 戸塚のパンチ -20<br>🚩 セーブポイント：全ステージ</span>
+        <span>J の体罰 -10 ／ 戸塚の体罰 -20<br>🚩 セーブポイント：全ステージ</span>
       </button>
       <button class="btn diff-btn" data-diff="normal">
         <b>⚔️ ノーマル</b>
-        <span>😎 J のパンチ -15 ／ 👹 戸塚のパンチ -35<br>🚩 セーブポイント：ステージ 1・3・5</span>
+        <span>J の体罰 -15 ／ 戸塚の体罰 -35<br>🚩 セーブポイント：ステージ 1・3・5</span>
       </button>
       <button class="btn diff-btn" data-diff="hard">
         <b>🔥 ハード</b>
-        <span>😎 J のパンチ -30 ／ 👹 戸塚のパンチ -60<br>🚩 セーブポイント：ステージ 1 のみ（死んだら最初から）</span>
+        <span>J の体罰 -30 ／ 戸塚の体罰 -60<br>🚩 セーブポイント：ステージ 1 のみ（死んだら最初から）</span>
       </button>
     </div>
   </section>
@@ -71,8 +75,8 @@
   <!-- クイズ画面 -->
   <section id="screen-quiz" class="screen">
     <div id="enemies">
-      <span class="enemy">😎 J <em id="dmg-j"></em></span>
-      <span class="enemy">👹 戸塚 <em id="dmg-t"></em></span>
+      <span class="enemy"><span class="enemy-face" data-face="j"></span>J <em id="dmg-j"></em></span>
+      <span class="enemy"><span class="enemy-face" data-face="totsuka"></span>戸塚 <em id="dmg-t"></em></span>
     </div>
     <p class="quiz-label">この単語の意味は？</p>
     <div id="question-word"></div>
@@ -109,6 +113,7 @@
 <!-- パンチ演出オーバーレイ -->
 <div id="punch-overlay" class="hidden">
   <div id="punch-face"></div>
+  <div id="punch-role"></div>
   <div id="punch-name"></div>
   <div id="punch-dmg"></div>
   <div id="punch-fist">👊</div>
