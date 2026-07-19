@@ -15,7 +15,7 @@ const STAGES = [
 const DIFFS = {
   easy:   { key: "easy",   name: "イージー", jDmg: 10, tDmg: 20, saves: [1, 2, 3, 4, 5] },
   normal: { key: "normal", name: "ノーマル", jDmg: 15, tDmg: 35, saves: [1, 3, 5] },
-  hard:   { key: "hard",   name: "ハード",   jDmg: 30, tDmg: 60, saves: [1] },
+  hard:   { key: "hard",   name: "ハード",   jDmg: 30, tDmg: 60, saves: [1], timeLimit: 10 },
 };
 
 const FACE_J = `<svg viewBox="0 0 100 100" role="img" aria-label="J">
@@ -54,7 +54,17 @@ const CUSTOM_FACES = { j: null, totsuka: null };
 const ATTACKERS = {
   j: {
     key: "j", name: "J", face: FACE_J, role: "",
-    hitLines: ["Jの体罰！ビンタが飛んだ！", "Jのジャブが刺さる！", "J「単語くらい覚えろよ」"],
+    hitLines: [
+      "Jの体罰！ビンタが飛んだ！",
+      "Jのジャブが刺さる！",
+      "J「単語くらい覚えろよ」",
+      "Jの往復ビンタ！！",
+      "J「甘えるな！！」",
+      "J「その程度で日本男児か！」",
+      "J「校長、こいつです」",
+      "J「この思想は後世に残すべき」",
+      "Jのボディーブロー！内臓に響く！",
+    ],
   },
   totsuka: {
     key: "totsuka", name: "戸塚", face: FACE_TOTSUKA, role: "戸塚ヨットスクール 校長",
@@ -63,6 +73,13 @@ const ATTACKERS = {
       "戸塚「体罰は教育だ！！」",
       "戸塚「理性は悪なんよ」",
       "戸塚「ヨットで性根を叩き直せ！」",
+      "戸塚「体罰は善！！」",
+      "戸塚「これは暴力じゃない。お前のための体罰だ」",
+      "戸塚「脳幹を鍛えろ！！」",
+      "戸塚「ワシは間違っとらん」",
+      "戸塚「日本男児よ、こう生きろ！」",
+      "戸塚「甘やかされて育ったな？」",
+      "戸塚「うちで更生したヤツは大勢おるわけじゃん」",
     ],
   },
 };
@@ -257,9 +274,62 @@ function showQuestion() {
     b.onclick = () => onAnswer(b, c);
     box.appendChild(b);
   });
+  startTimer();
 }
+
+// ---------- 制限時間（ハードのみ） ----------
+let qTimerId = null;
+let qDeadline = 0;
+
+function startTimer() {
+  stopTimer();
+  const limit = state.diff.timeLimit;
+  const wrap = $("timer-wrap");
+  if (!limit) {
+    wrap.classList.add("hidden");
+    return;
+  }
+  wrap.classList.remove("hidden");
+  qDeadline = Date.now() + limit * 1000;
+  updateTimer(limit);
+  qTimerId = setInterval(() => {
+    const remain = (qDeadline - Date.now()) / 1000;
+    if (remain <= 0) {
+      stopTimer();
+      updateTimer(0);
+      onTimeout();
+    } else {
+      updateTimer(remain);
+    }
+  }, 100);
+}
+function updateTimer(remain) {
+  const limit = state.diff.timeLimit;
+  const fill = $("timer-fill");
+  fill.style.width = Math.max(0, (remain / limit) * 100) + "%";
+  fill.classList.toggle("hurry", remain <= 3);
+  $("timer-text").textContent = `⏰ ${remain.toFixed(1)}`;
+}
+function stopTimer() {
+  if (qTimerId) {
+    clearInterval(qTimerId);
+    qTimerId = null;
+  }
+}
+function onTimeout() {
+  const q = state.qs[state.qi];
+  document.querySelectorAll(".choice").forEach((b) => {
+    b.disabled = true;
+    if (b.textContent === q.ja) b.classList.add("is-correct");
+  });
+  state.stats.wrong++;
+  $("feedback").textContent = `⏰ 時間切れ！ 正解は「${q.ja}」`;
+  setTimeout(doPunch, 550);
+}
+
 function onAnswer(btn, choice) {
   ensureAudio();
+  stopTimer();
   const q = state.qs[state.qi];
   document.querySelectorAll(".choice").forEach((b) => {
     b.disabled = true;

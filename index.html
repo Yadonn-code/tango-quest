@@ -60,7 +60,7 @@
       </button>
       <button class="btn diff-btn" data-diff="hard">
         <b>🔥 ハード</b>
-        <span>J の体罰 -30 ／ 戸塚の体罰 -60<br>🚩 セーブポイント：ステージ 1 のみ（死んだら最初から）</span>
+        <span>J の体罰 -30 ／ 戸塚の体罰 -60<br>🚩 セーブポイント：ステージ 1 のみ（死んだら最初から）<br>⏰ 1問10秒の時間制限！時間切れは体罰！</span>
       </button>
     </div>
   </section>
@@ -81,6 +81,10 @@
     </div>
     <p class="quiz-label">この単語の意味は？</p>
     <div id="question-word"></div>
+    <div id="timer-wrap" class="hidden">
+      <div id="timer-bar"><div id="timer-fill"></div></div>
+      <span id="timer-text"></span>
+    </div>
     <div id="choices"></div>
     <p id="feedback">&nbsp;</p>
   </section>
