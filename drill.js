@@ -14,6 +14,29 @@ function shuffle(arr) {
 let drill = null;
 let lastCount = 10;
 
+const APP_URL = "https://yadonn-code.github.io/tango-quest/";
+
+// ---------- シェア（スマホは共有シート、PCはクリップボードコピー） ----------
+async function shareOrCopy(text, btn) {
+  const full = `${text}\n${APP_URL}`;
+  if (navigator.share) {
+    try {
+      await navigator.share({ text: full });
+      return;
+    } catch (e) {
+      if (e.name === "AbortError") return; // ユーザーがキャンセルしただけ
+    }
+  }
+  try {
+    await navigator.clipboard.writeText(full);
+    const old = btn.textContent;
+    btn.textContent = "✅ コピーした！貼り付けて共有してね";
+    setTimeout(() => { btn.textContent = old; }, 2000);
+  } catch (e) {
+    window.prompt("この内容をコピーして共有してね", full);
+  }
+}
+
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach((s) => s.classList.toggle("active", s.id === id));
 }
@@ -86,6 +109,7 @@ function showResult() {
   else if (acc >= 50) title = "⚔️ あと一歩！";
   else title = "🩹 のびしろしかない";
   $("result-title").textContent = title;
+  drill.lastResult = { title, total, acc };
   $("result-stats").innerHTML = `${total}問 中 ⭕ ${drill.ok} ／ ❌ ${drill.ng}（正答率 ${acc}%）`;
   const missBox = $("miss-box");
   const reviewBtn = $("btn-review");
@@ -113,6 +137,13 @@ window.addEventListener("DOMContentLoaded", () => {
   $("btn-quit").onclick = () => showResult();
   $("btn-review").onclick = () => startDrill(drill.misses.length, drill.misses.slice());
   $("btn-again").onclick = () => startDrill(lastCount);
+  $("btn-share-result").onclick = (e) => {
+    const r = (drill && drill.lastResult) || { title: "", total: 0, acc: 0 };
+    shareOrCopy(
+      `『Jと戸塚からの体罰を避けろ』一問一答モード\n${r.total}問やって正答率${r.acc}%！ ${r.title}`,
+      e.currentTarget
+    );
+  };
 
   document.addEventListener("keydown", (e) => {
     if (!drill || !$("drill-play").classList.contains("active")) return;

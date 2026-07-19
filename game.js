@@ -3,6 +3,7 @@
 const MAX_HP = 100;
 const Q_PER_STAGE = 10;
 const SAVE_KEY = "tangoQuestSaveV1";
+const APP_URL = "https://yadonn-code.github.io/tango-quest/";
 
 const STAGES = [
   { name: "はじまりの草原", icon: "🌱", theme: "grass",  intro: "冒険のはじまり。まずは肩ならしだ。" },
@@ -90,6 +91,27 @@ function faceHTML(atk) {
 }
 
 const $ = (id) => document.getElementById(id);
+
+// ---------- シェア（スマホは共有シート、PCはクリップボードコピー） ----------
+async function shareOrCopy(text, btn) {
+  const full = `${text}\n${APP_URL}`;
+  if (navigator.share) {
+    try {
+      await navigator.share({ text: full });
+      return;
+    } catch (e) {
+      if (e.name === "AbortError") return; // ユーザーがキャンセルしただけ
+    }
+  }
+  try {
+    await navigator.clipboard.writeText(full);
+    const old = btn.textContent;
+    btn.textContent = "✅ コピーした！貼り付けて共有してね";
+    setTimeout(() => { btn.textContent = old; }, 2000);
+  } catch (e) {
+    window.prompt("この内容をコピーして共有してね", full);
+  }
+}
 
 function shuffle(arr) {
   const a = [...arr];
@@ -462,6 +484,7 @@ function ending() {
   else if (s.tHits >= 5) title = "🥊 戸塚のサンドバッグ";
   else if (acc >= 80) title = "⚔️ 歴戦の冒険者";
   else title = "🩹 ボロボロの生還者";
+  state.result = { title, acc };
   $("ending-title-badge").textContent = `称号：${title}`;
   $("ending-stats").innerHTML =
     `正解率：${acc}%（${s.correct}/${total}問）<br>` +
@@ -489,5 +512,18 @@ window.addEventListener("DOMContentLoaded", () => {
   $("btn-clear-next").onclick = () => goMap("");
   $("btn-respawn").onclick = () => respawn();
   $("btn-ending-title").onclick = () => initTitle();
+  $("btn-share").onclick = (e) =>
+    shareOrCopy(
+      "英単語RPG『Jと戸塚からの体罰を避けろ ～理性は悪なんよ～』\nまちがえるとJと戸塚の体罰が飛んでくる英単語クイズ！",
+      e.currentTarget
+    );
+  $("btn-share-ending").onclick = (e) => {
+    const s = state.stats;
+    const r = state.result || { title: "", acc: 0 };
+    shareOrCopy(
+      `『Jと戸塚からの体罰を避けろ』全ステージ制覇！\n称号：${r.title}\n正解率${r.acc}%・体罰${s.jHits + s.tHits}回・死亡${s.deaths}回`,
+      e.currentTarget
+    );
+  };
   initTitle();
 });
