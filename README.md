@@ -5,9 +5,15 @@
 
 ブラウザだけで動く純粋な HTML / CSS / JavaScript 製。インストール不要です。
 
+## 🎮 今すぐ遊ぶ
+
+**https://yadonn-code.github.io/tango-quest/**
+
+URLを開くだけでスマホでもPCでも遊べます。
+
 ## 遊び方
 
-1. `index.html` をブラウザで開く（GitHub Pages 公開後は URL を開くだけ）
+1. 上のURLを開く（またはダウンロードして `index.html` をブラウザで開く）
 2. 難易度を選ぶ
 3. 各ステージ10問の4択クイズに答えて、全5ステージの制覇を目指す
 
