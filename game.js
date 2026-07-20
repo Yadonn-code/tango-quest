@@ -216,7 +216,22 @@ let state = null;
 
 // ---------- サウンド（WebAudio） ----------
 let audioCtx = null;
+// iPhoneはマナーモード中WebAudioが消音されるため、無音の<audio>をループ再生して
+// 「メディア再生」扱いに切り替える（マナーモードでもBGM・効果音が鳴るようになる）
+let silentAudio = null;
+function unlockMobileAudio() {
+  try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch (e) {}
+  if (silentAudio) return;
+  try {
+    const a = new Audio("data:audio/wav;base64,UklGRiwAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQgAAACAgICAgICAgA==");
+    a.loop = true;
+    const p = a.play();
+    if (p && p.then) p.then(() => { silentAudio = a; }).catch(() => {});
+    else silentAudio = a;
+  } catch (e) { /* 未対応環境では何もしない */ }
+}
 function ensureAudio() {
+  unlockMobileAudio();
   if (!audioCtx) {
     try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { audioCtx = null; }
   }
@@ -884,6 +899,8 @@ function ending() {
 
 // ---------- イベント登録 ----------
 window.addEventListener("DOMContentLoaded", () => {
+  // 最初のタップ/クリックで音声を有効化（スマホの自動再生制限対策）
+  window.addEventListener("pointerdown", ensureAudio, { once: true });
   document.querySelectorAll("[data-face]").forEach((el) => {
     el.innerHTML = faceHTML(ATTACKERS[el.dataset.face]);
   });

@@ -10,6 +10,15 @@ body {
   color: #f5f5f4;
   min-height: 100vh;
   line-height: 1.7;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* スマホのタップ操作向け: ダブルタップ拡大・長押し選択・タップ時のハイライトを抑止 */
+button, .btn, .choice, .item-btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 /* ---------- テーマ（ステージごとの背景） ---------- */
@@ -543,4 +552,27 @@ a.btn {
   #question-word, #drill-word { font-size: 2.2rem; padding: 14px 20px; }
   #choices { grid-template-columns: 1fr; }
   .map-node { width: 90px; }
+  #app { padding: 10px; }
+  #hud { padding: 8px 10px; }
+  #hud-top { font-size: 0.8rem; gap: 6px; }
+  #hp-text { font-size: 0.8rem; }
+  .item-btn { font-size: 0.8rem; padding: 2px 8px; }
+  #boss-wrap { padding: 8px 10px; }
+  #boss-name { font-size: 1rem; }
+  .boss-hint { font-size: 0.7rem; }
+  #punch-attacker { font-size: 1.15rem; padding: 3px 14px; }
+  #punch-face svg, #punch-face .face-img { width: 6.5rem; height: 6.5rem; }
+  #punch-name { font-size: 1.25rem; }
+  #punch-dmg { font-size: 2.8rem; }
+  #punch-fist { font-size: 4.5rem; }
+  .choice { padding: 12px 10px; }
+}
+
+/* ノッチのある端末で端が欠けないようにする */
+@supports (padding: env(safe-area-inset-left)) {
+  #app {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
 }
