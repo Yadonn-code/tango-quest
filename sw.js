@@ -2,7 +2,7 @@
 
 // オフラインでも遊べるようにするサービスワーカー。
 // ネットワーク優先で常に最新版を取りに行き、圏外・機内モードのときだけキャッシュで動く。
-const CACHE = "tango-quest-v1";
+const CACHE = "tango-quest-v3";
 const ASSETS = [
   "./",
   "index.html",

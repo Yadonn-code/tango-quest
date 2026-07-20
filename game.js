@@ -10,7 +10,7 @@ const STAGES = [
   { name: "まちがいの森",   icon: "🌲", theme: "forest", intro: "道に迷いそうな深い森。Jの気配がする……" },
   { name: "忘却の洞窟",     icon: "🦇", theme: "cave",   intro: "暗くて足元が見えない。覚えた単語まで忘れそうだ。" },
   { name: "吹雪の雪山",     icon: "🏔️", theme: "snow",   intro: "極寒の山。戸塚の拳がうなりを上げている。" },
-  { name: "最終決戦・魔王城", icon: "🏰", theme: "castle", intro: "ここを越えれば単語マスター。全力で駆け抜けろ！" },
+  { name: "最終決戦・魔王城", icon: "🏰", theme: "castle", intro: "中ボスJと魔王・戸塚が待ち構える最終決戦。正解が武器だ。単語で殴り返せ！" },
 ];
 
 const DIFFS = {
@@ -65,7 +65,49 @@ const ATTACKERS = {
       "J「校長、こいつです」",
       "J「この思想は後世に残すべき」",
       "Jのボディーブロー！内臓に響く！",
+      "J「シス単、何周した？」",
+      "J「それ中学で習ったろ」",
+      "Jのローキックが炸裂！",
+      "J「戸塚校長を呼ぶぞ」",
+      "J「お前の脳幹に直接教えてやる」",
+      "J「泣いてもいいが、手は止めんぞ」",
+      "Jのチョップ！背筋が伸びる！",
+      "J「俺は悲しいよ……（パンチ）」",
+      "J「合宿、1週間追加な」",
     ],
+    // HPが残りわずかのときの追い打ちセリフ
+    lowLines: [
+      "J「おいおい、もうフラフラか？」",
+      "J「ここでやめたら合宿行きだぞ」",
+      "J「立て。単語はまだ残っとるぞ」",
+      "J「限界？　それは脳幹に聞け」",
+    ],
+    // 時間切れ（ハード）専用セリフ
+    timeoutLines: [
+      "J「考えとる時間が長いんよ！」",
+      "J「10秒あったろ！！」",
+      "J「迷った時点で不正解なんだわ」",
+    ],
+    // 正解したときに悔しがるセリフ（たまに出る）
+    tauntLines: [
+      "J「ちっ、覚えとったか」",
+      "J「……悪くない」",
+      "J「その調子だ。だが次は殴る」",
+      "J「まぐれで喜ぶな」",
+    ],
+    // 死亡画面のセリフ
+    deadLines: [
+      "J「……寝たか。まあ、よう頑張ったわ」",
+      "J「セーブポイントで反省しとけ」",
+      "J「目が覚めたら単語帳の続きからな」",
+    ],
+    // ボス戦（中ボス）
+    bossTitle: "中ボス",
+    bossHp: 50,
+    bossIntro: "J「ここから先は魔王・戸塚の間。まず俺を倒してから行け」",
+    bossHalf: "J「へえ……ちょっとは鍛えたな？」",
+    bossHitLines: ["J「ぐっ……！」", "J「そのくらい効かん！」", "J「いい一撃だ……！」"],
+    bossDefeat: "J「くっ……単語力で負けるとは……あとは任せた、校長ォ！！」",
   },
   totsuka: {
     key: "totsuka", name: "戸塚", face: FACE_TOTSUKA, role: "戸塚ヨットスクール 校長",
@@ -81,9 +123,56 @@ const ATTACKERS = {
       "戸塚「日本男児よ、こう生きろ！」",
       "戸塚「甘やかされて育ったな？」",
       "戸塚「うちで更生したヤツは大勢おるわけじゃん」",
+      "戸塚「褒める教育が人間をダメにするんよ」",
+      "戸塚「お前の脳幹、完全に寝とるわ」",
+      "戸塚「恐怖は進歩の原動力なんよ」",
+      "戸塚「ワシは50年間、正しいことしかしとらん」",
+      "戸塚「その根性、ヨットで直るわ」",
+      "戸塚「合宿の準備をしとけ」",
+      "戸塚「親御さんには連絡済みだわ」",
+      "戸塚「単語も覚えられんのは脳幹が弱いからよ」",
+      "戸塚「ええ体罰と悪い体罰があってな、これはええ体罰」",
+      "戸塚「口で言うてわかるなら、とっくにわかっとるわな」",
+      "戸塚のアンカー投げ！⚓",
+      "戸塚「泳げ。話はそれからだわ」",
     ],
+    lowLines: [
+      "戸塚「フラフラになってからが教育よ」",
+      "戸塚「limit？　そんな単語は教えとらん」",
+      "戸塚「気絶は甘え」",
+      "戸塚「ここで折れるようなら海に出すわ」",
+    ],
+    timeoutLines: [
+      "戸塚「迷っとる暇があったら答えんかい！」",
+      "戸塚「即断即決！それが脳幹よ！」",
+      "戸塚「海の上では10秒が命取りなんよ」",
+    ],
+    tauntLines: [
+      "戸塚「ふん、まぐれだわ」",
+      "戸塚「脳幹が目覚めてきたか？」",
+      "戸塚「正解ごときで喜ぶな」",
+      "戸塚「……ええ答えだわ」",
+    ],
+    deadLines: [
+      "戸塚「気絶も教育の一部なんよ」",
+      "戸塚「目が覚めたらまた鍛えたるわ」",
+      "戸塚「ワシは謝罪せんぞ。教育だからな」",
+    ],
+    // ボス戦（ラスボス）
+    bossTitle: "魔王",
+    bossHp: 100,
+    bossIntro: "魔王・戸塚「ようここまで来たわ。じゃがのう、わしの脳幹は日本一よ」",
+    bossHalf: "戸塚「……ほう。その脳幹、鍛わっとるわ」",
+    bossHitLines: ["戸塚「ぬうっ！？」", "戸塚「効いとらん！効いとらんわ！」", "戸塚「小癪な単語力よ……！」"],
+    bossDefeat: "戸塚「わしの負けだわ……お前の脳幹、日本一よ」",
   },
 };
+
+// ボス戦の出現順（中ボスJ → 魔王・戸塚）
+const BOSS_ORDER = ["j", "totsuka"];
+// プレイヤーの攻撃名（正解時にランダムで表示）
+const PLAYER_ATTACKS = ["📖 単語の一撃！", "📖 ボキャブラリーアタック！", "✏️ シス単スラッシュ！"];
+const CRIT_ATTACK = "💥 会心の一撃！！";
 
 function faceHTML(atk) {
   const img = CUSTOM_FACES[atk.key];
@@ -121,6 +210,7 @@ function shuffle(arr) {
   }
   return a;
 }
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 let state = null;
 
@@ -130,6 +220,7 @@ function ensureAudio() {
   if (!audioCtx) {
     try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { audioCtx = null; }
   }
+  if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
 }
 function beep(freq, dur, type, vol, delay) {
   if (!audioCtx) return;
@@ -151,7 +242,115 @@ const sfx = {
   dead()    { [392, 330, 262, 196, 131].forEach((f, i) => beep(f, 0.25, "triangle", 0.15, i * 0.22)); },
   save()    { [523, 659, 784, 1047].forEach((f, i) => beep(f, 0.15, "triangle", 0.1, i * 0.1)); },
   clear()   { [523, 659, 784].forEach((f, i) => beep(f, 0.12, "square", 0.1, i * 0.1)); },
+  heal()    { [659, 880, 1047].forEach((f, i) => beep(f, 0.12, "triangle", 0.1, i * 0.08)); },
+  attack()  { beep(220, 0.12, "sawtooth", 0.18); beep(330, 0.15, "square", 0.15, 0.06); },
+  crit()    { beep(220, 0.1, "sawtooth", 0.22); beep(440, 0.12, "square", 0.2, 0.06); beep(880, 0.25, "square", 0.18, 0.13); },
+  bossDown() { [784, 659, 523, 392].forEach((f, i) => beep(f, 0.18, "triangle", 0.15, i * 0.15)); [523, 659, 784, 1047, 1318].forEach((f, i) => beep(f, 0.14, "square", 0.12, 0.7 + i * 0.1)); },
 };
+
+// ---------- BGM（WebAudioで生成するチップチューン。音声ファイル不要） ----------
+const BGM_MUTE_KEY = "tangoQuestBgmOff";
+const midiHz = (n) => 440 * Math.pow(2, (n - 69) / 12);
+// 8分音符×32ステップ（4小節）のループ。0は休符、数字はMIDIノート番号
+const BGM_TRACKS = {
+  // フィールド曲（C調・明るい冒険風）
+  field: {
+    tempo: 118,
+    bass: [
+      48, 0, 55, 0, 48, 0, 55, 0,   45, 0, 52, 0, 45, 0, 52, 0,
+      41, 0, 48, 0, 41, 0, 48, 0,   43, 0, 50, 0, 43, 0, 50, 0,
+    ],
+    mel: [
+      64, 67, 72, 67, 64, 67, 74, 72,   72, 76, 69, 76, 72, 69, 71, 72,
+      69, 72, 65, 72, 69, 65, 67, 69,   67, 71, 74, 71, 67, 74, 71, 67,
+    ],
+  },
+  // ボス戦曲（A短調・速くて不穏）
+  boss: {
+    tempo: 150,
+    bass: [
+      45, 45, 45, 44, 45, 45, 48, 47,   45, 45, 45, 44, 45, 45, 48, 50,
+      41, 41, 41, 40, 41, 41, 44, 43,   40, 40, 40, 40, 43, 43, 44, 44,
+    ],
+    mel: [
+      0, 0, 69, 0, 0, 68, 69, 0,   0, 0, 72, 0, 0, 71, 72, 0,
+      0, 0, 77, 0, 0, 76, 77, 0,   76, 0, 75, 0, 76, 0, 79, 0,
+    ],
+  },
+  // エンディング曲（C調・ファンファーレ風）
+  ending: {
+    tempo: 128,
+    bass: [
+      48, 0, 55, 0, 48, 0, 55, 0,   48, 0, 55, 0, 48, 0, 55, 0,
+      41, 0, 48, 0, 41, 0, 48, 0,   43, 0, 50, 0, 43, 0, 50, 0,
+    ],
+    mel: [
+      72, 0, 72, 0, 72, 0, 76, 0,   79, 0, 76, 0, 79, 0, 84, 0,
+      81, 79, 77, 79, 81, 0, 79, 0,   76, 74, 72, 74, 76, 0, 79, 0,
+    ],
+  },
+};
+const bgm = {
+  name: null, timer: null, gain: null, step: 0, nextT: 0,
+  get muted() {
+    try { return localStorage.getItem(BGM_MUTE_KEY) === "1"; } catch (e) { return false; }
+  },
+  set muted(v) {
+    try { v ? localStorage.setItem(BGM_MUTE_KEY, "1") : localStorage.removeItem(BGM_MUTE_KEY); } catch (e) {}
+  },
+  play(name) {
+    if (this.name === name && this.timer) return; // 同じ曲は流しっぱなし
+    this.stopSound();
+    this.name = name; // ミュート中も曲名は覚えておき、解除時に再開できるようにする
+    if (this.muted) return;
+    ensureAudio();
+    if (!audioCtx) return;
+    this.gain = audioCtx.createGain();
+    this.gain.gain.value = 1;
+    this.gain.connect(audioCtx.destination);
+    this.step = 0;
+    this.nextT = audioCtx.currentTime + 0.08;
+    this.timer = setInterval(() => this.tick(), 90);
+  },
+  tick() {
+    const tr = BGM_TRACKS[this.name];
+    if (!tr || !this.gain) return;
+    const stepDur = 60 / tr.tempo / 2;
+    while (this.nextT < audioCtx.currentTime + 0.3) {
+      const i = this.step % tr.bass.length;
+      if (tr.bass[i]) this.note(midiHz(tr.bass[i]), this.nextT, stepDur * 0.95, "triangle", 0.055);
+      if (tr.mel[i]) this.note(midiHz(tr.mel[i]), this.nextT, stepDur * 0.9, "square", 0.03);
+      this.step++;
+      this.nextT += stepDur;
+    }
+  },
+  note(freq, t, dur, type, vol) {
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = type;
+    o.frequency.setValueAtTime(freq, t);
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    o.connect(g).connect(this.gain);
+    o.start(t);
+    o.stop(t + dur);
+  },
+  stopSound() {
+    if (this.timer) { clearInterval(this.timer); this.timer = null; }
+    if (this.gain) { this.gain.disconnect(); this.gain = null; }
+  },
+  stop() { this.stopSound(); this.name = null; },
+  toggleMute() {
+    this.muted = !this.muted;
+    if (this.muted) this.stopSound();
+    else if (this.name) { const n = this.name; this.name = null; this.play(n); }
+    syncBgmButtons();
+  },
+};
+function syncBgmButtons() {
+  $("btn-bgm").textContent = bgm.muted ? "🔇 BGM：OFF" : "🔊 BGM：ON";
+  $("hud-bgm").textContent = bgm.muted ? "🔇" : "🔊";
+}
 
 // ---------- 画面切り替え ----------
 function showScreen(id) {
@@ -180,6 +379,7 @@ function clearSave() {
 // ---------- タイトル ----------
 function initTitle() {
   setTheme("theme-title");
+  bgm.stop();
   const save = readSave();
   const btn = $("btn-continue");
   if (save) {
@@ -202,7 +402,10 @@ function startGame(diffKey, startStageNo) {
     qs: [],
     qi: 0,
     stageCorrect: 0,
-    stats: { correct: 0, wrong: 0, jHits: 0, tHits: 0, deaths: 0 },
+    combo: 0,
+    items: 1,
+    boss: null,
+    stats: { correct: 0, wrong: 0, jHits: 0, tHits: 0, deaths: 0, maxCombo: 0 },
   };
   writeSave();
   $("dmg-j").textContent = `-${state.diff.jDmg}`;
@@ -213,6 +416,7 @@ function startGame(diffKey, startStageNo) {
 // ---------- マップ ----------
 function goMap(msg) {
   setTheme("theme-map");
+  bgm.play("field");
   renderMap();
   const st = STAGES[state.stage - 1];
   $("map-msg").innerHTML = (msg ? msg + "<br>" : "") + st.intro;
@@ -246,12 +450,64 @@ function renderMap() {
 function startStage() {
   const st = STAGES[state.stage - 1];
   setTheme("theme-" + st.theme);
+  bgm.play(state.stage === STAGES.length ? "boss" : "field");
   state.qs = makeQuestions();
   state.qi = 0;
   state.stageCorrect = 0;
+  state.boss = null;
   showScreen("screen-quiz");
+  if (state.stage === STAGES.length) {
+    startBossBattle(0);
+    return;
+  }
+  $("boss-wrap").classList.add("hidden");
+  $("enemies").classList.remove("hidden");
   updateHud();
   showQuestion();
+}
+
+// ---------- ボス戦（最終ステージ） ----------
+function startBossBattle(idx, msg) {
+  const atk = ATTACKERS[BOSS_ORDER[idx]];
+  state.boss = { idx, atk, hp: atk.bossHp, max: atk.bossHp, halfShown: false };
+  $("enemies").classList.add("hidden");
+  $("boss-wrap").classList.remove("hidden");
+  updateBossUI();
+  updateHud();
+  showCutscene(atk, atk.bossIntro, 2400, () => {
+    showQuestion();
+    if (msg) $("feedback").innerHTML = msg;
+  });
+}
+function updateBossUI() {
+  const b = state.boss;
+  $("boss-face").innerHTML = faceHTML(b.atk);
+  $("boss-name").textContent = `${b.atk.bossTitle}・${b.atk.name}`;
+  $("boss-fill").style.width = (b.hp / b.max) * 100 + "%";
+  $("boss-hp-text").textContent = `${b.hp}/${b.max}`;
+}
+// 演出オーバーレイ上部の「だれの行動か」バナー
+function setAttackerBanner(cls, text) {
+  const el = $("punch-attacker");
+  el.className = cls;
+  el.textContent = text;
+}
+// パンチ演出のオーバーレイを流用したカットシーン（こぶしなし・セリフのみ）
+function showCutscene(atk, line, ms, cb) {
+  const ov = $("punch-overlay");
+  setAttackerBanner(atk.key === "totsuka" ? "atk-t" : "atk-j", `⚔️ ${atk.bossTitle}・${atk.name} 出現！！`);
+  $("punch-face").innerHTML = faceHTML(atk);
+  $("punch-role").textContent = atk.role;
+  $("punch-name").textContent = line;
+  $("punch-dmg").textContent = "";
+  $("punch-fist").classList.remove("go", "out");
+  ov.classList.toggle("totsuka", atk.key === "totsuka");
+  ov.classList.remove("player");
+  ov.classList.remove("hidden");
+  setTimeout(() => {
+    ov.classList.add("hidden");
+    if (cb) cb();
+  }, ms);
 }
 function makeQuestions() {
   let pool = WORDS.filter((w) => !state.used.has(w.en));
@@ -275,16 +531,29 @@ function updateHud() {
   const st = STAGES[state.stage - 1];
   $("hud-stage").textContent = `${st.icon} STAGE ${state.stage} ${st.name}`;
   $("hud-diff").textContent = state.diff.name;
-  $("hud-q").textContent = `Q ${Math.min(state.qi + 1, Q_PER_STAGE)}/${Q_PER_STAGE}`;
+  $("hud-q").textContent = state.boss ? "⚔️ BOSS戦" : `Q ${Math.min(state.qi + 1, Q_PER_STAGE)}/${Q_PER_STAGE}`;
   const pct = (state.hp / MAX_HP) * 100;
   const fill = $("hp-fill");
   fill.style.width = pct + "%";
   fill.className = pct > 50 ? "" : pct > 25 ? "mid" : "low";
   $("hp-text").textContent = `HP ${state.hp}/${MAX_HP}`;
+  const cb = $("hud-combo");
+  if (state.combo >= 2) {
+    cb.classList.remove("hidden");
+    cb.textContent = `🔥${state.combo}コンボ`;
+    cb.classList.remove("pop");
+    void cb.offsetWidth;
+    cb.classList.add("pop");
+  } else {
+    cb.classList.add("hidden");
+  }
+  const ib = $("btn-item");
+  ib.textContent = `🍙×${state.items}`;
+  ib.disabled = state.items <= 0 || state.hp >= MAX_HP;
 }
 function showQuestion() {
   const q = state.qs[state.qi];
-  $("hud-q").textContent = `Q ${state.qi + 1}/${Q_PER_STAGE}`;
+  $("hud-q").textContent = state.boss ? "⚔️ BOSS戦" : `Q ${state.qi + 1}/${Q_PER_STAGE}`;
   $("question-word").textContent = q.en;
   $("feedback").innerHTML = "&nbsp;";
   const box = $("choices");
@@ -345,8 +614,11 @@ function onTimeout() {
     if (b.textContent === q.ja) b.classList.add("is-correct");
   });
   state.stats.wrong++;
-  $("feedback").textContent = `⏰ 時間切れ！ 正解は「${q.ja}」`;
-  setTimeout(doPunch, 550);
+  const hadCombo = state.combo >= 3;
+  state.combo = 0;
+  updateHud();
+  $("feedback").innerHTML = `⏰ 時間切れ！ 正解は「${q.ja}」` + (hadCombo ? "<br>（コンボが途切れた！）" : "");
+  setTimeout(() => doPunch("timeout"), 550);
 }
 
 function onAnswer(btn, choice) {
@@ -360,37 +632,141 @@ function onAnswer(btn, choice) {
   if (choice === q.ja) {
     state.stats.correct++;
     state.stageCorrect++;
+    state.combo++;
+    state.stats.maxCombo = Math.max(state.stats.maxCombo, state.combo);
     sfx.correct();
-    $("feedback").textContent = "⭕ せいかい！";
-    setTimeout(nextQuestion, 700);
+    let fb = state.combo >= 2 ? `⭕ せいかい！ 🔥${state.combo}コンボ！` : "⭕ せいかい！";
+    if (state.combo % 5 === 0 && state.hp < MAX_HP) {
+      // 5コンボごとに気合いで少し回復
+      state.hp = Math.min(MAX_HP, state.hp + 10);
+      sfx.heal();
+      fb += `<br><span class="fb-heal">🔥 気合いでHPが10回復！</span>`;
+    } else if (!state.boss && Math.random() < 0.25) {
+      // たまに敵が悔しがる
+      const atk = Math.random() < 0.5 ? ATTACKERS.j : ATTACKERS.totsuka;
+      fb += `<br><span class="fb-taunt">${pick(atk.tauntLines)}</span>`;
+    }
+    $("feedback").innerHTML = fb;
+    updateHud();
+    if (state.boss) setTimeout(playerAttack, 600);
+    else setTimeout(nextQuestion, 900);
   } else {
     state.stats.wrong++;
+    const hadCombo = state.combo >= 3;
+    state.combo = 0;
+    updateHud();
     btn.classList.add("is-wrong");
-    $("feedback").textContent = `❌ 正解は「${q.ja}」`;
-    setTimeout(doPunch, 550);
+    $("feedback").innerHTML = `❌ 正解は「${q.ja}」` + (hadCombo ? "<br>（コンボが途切れた！）" : "");
+    setTimeout(() => doPunch(), 550);
   }
 }
 function nextQuestion() {
   state.qi++;
+  if (state.boss) {
+    // ボス戦は敵を倒すまでエンドレス出題
+    if (state.qi >= state.qs.length) {
+      state.qs = makeQuestions();
+      state.qi = 0;
+    }
+    showQuestion();
+    return;
+  }
   if (state.qi >= Q_PER_STAGE) stageClear();
   else showQuestion();
 }
 
+// ---------- プレイヤーの攻撃（ボス戦・正解時） ----------
+function playerAttack() {
+  const b = state.boss;
+  const atk = b.atk;
+  let dmg = 10 + 2 * Math.min(state.combo, 5);
+  const crit = state.combo >= 5;
+  if (crit) dmg = Math.round(dmg * 1.5);
+  b.hp = Math.max(0, b.hp - dmg);
+
+  const ov = $("punch-overlay");
+  setAttackerBanner("atk-you", "🗡️ あなたのこうげき！");
+  $("punch-face").innerHTML = faceHTML(atk);
+  $("punch-role").textContent = `${atk.bossTitle}・${atk.name}`;
+  $("punch-name").textContent = crit ? CRIT_ATTACK : pick(PLAYER_ATTACKS);
+  const dmgEl = $("punch-dmg");
+  dmgEl.textContent = "";
+  ov.classList.remove("totsuka");
+  ov.classList.add("player");
+  ov.classList.remove("hidden");
+
+  const fist = $("punch-fist");
+  fist.textContent = "📖";
+  fist.classList.remove("go", "out");
+  void fist.offsetWidth;
+  fist.classList.add("go");
+  if (crit) sfx.crit();
+  else sfx.attack();
+
+  setTimeout(() => {
+    fist.classList.add("out");
+    updateBossUI();
+    dmgEl.textContent = `-${dmg}`;
+    dmgEl.classList.remove("pop");
+    void dmgEl.offsetWidth;
+    dmgEl.classList.add("pop");
+    let line;
+    if (b.hp <= 0) line = atk.bossDefeat;
+    else if (!b.halfShown && b.hp <= b.max / 2) {
+      b.halfShown = true;
+      line = atk.bossHalf;
+    } else {
+      line = pick(atk.bossHitLines);
+    }
+    $("punch-name").textContent = line;
+  }, 320);
+
+  setTimeout(() => {
+    ov.classList.add("hidden");
+    ov.classList.remove("player");
+    fist.textContent = "👊";
+    if (b.hp <= 0) bossDefeated();
+    else nextQuestion();
+  }, 2000);
+}
+function bossDefeated() {
+  sfx.bossDown();
+  const beaten = state.boss.atk;
+  const nextIdx = state.boss.idx + 1;
+  if (nextIdx < BOSS_ORDER.length) {
+    state.hp = Math.min(MAX_HP, state.hp + 30);
+    startBossBattle(nextIdx, `⚔️ ${beaten.name}を倒した！気合いでHPが30回復！`);
+  } else {
+    state.boss = null;
+    stageClear();
+  }
+}
+
 // ---------- パンチ演出 ----------
-function doPunch() {
-  const isJ = Math.random() < 0.65;
+function doPunch(reason) {
+  // ボス戦中は今戦っているボスが殴ってくる。通常はランダム
+  const isJ = state.boss ? state.boss.atk.key === "j" : Math.random() < 0.65;
   const atk = isJ ? ATTACKERS.j : ATTACKERS.totsuka;
   const dmg = isJ ? state.diff.jDmg : state.diff.tDmg;
   if (isJ) state.stats.jHits++;
   else state.stats.tHits++;
 
+  // 状況に合わせてセリフを出し分ける
+  const hpAfter = Math.max(0, state.hp - dmg);
+  let line;
+  if (reason === "timeout") line = pick(atk.timeoutLines);
+  else if (hpAfter > 0 && hpAfter <= 30 && Math.random() < 0.5) line = pick(atk.lowLines);
+  else line = pick(atk.hitLines);
+
   const ov = $("punch-overlay");
+  setAttackerBanner(isJ ? "atk-j" : "atk-t", isJ ? "😎 Jのこうげき！" : "👹 戸塚のこうげき！");
   $("punch-face").innerHTML = faceHTML(atk);
-  $("punch-role").textContent = atk.role;
-  $("punch-name").textContent = atk.hitLines[Math.floor(Math.random() * atk.hitLines.length)];
+  $("punch-role").textContent = state.boss ? `${atk.bossTitle}・${atk.name}` : atk.role;
+  $("punch-name").textContent = line;
   const dmgEl = $("punch-dmg");
   dmgEl.textContent = "";
   ov.classList.toggle("totsuka", !isJ);
+  ov.classList.remove("player");
   ov.classList.remove("hidden");
 
   const fist = $("punch-fist");
@@ -432,15 +808,20 @@ function triggerFlash() {
 // ---------- 死亡・リスポーン ----------
 function onDead(atk) {
   state.stats.deaths++;
+  bgm.stop();
   sfx.dead();
   setTheme("theme-dead");
   $("dead-face").innerHTML = faceHTML(atk);
-  $("dead-msg").innerHTML = `${atk.name}の一撃で意識が飛んだ……<br>気がつくとセーブポイントにいた。`;
+  $("dead-msg").innerHTML =
+    `${atk.name}の一撃で意識が飛んだ……<br>` +
+    `<span class="dead-line">${pick(atk.deadLines)}</span><br>` +
+    `気がつくとセーブポイントにいた。`;
   $("btn-respawn").textContent = `🚩 ステージ${state.saveStage}からやり直す`;
   showScreen("screen-dead");
 }
 function respawn() {
   state.hp = MAX_HP;
+  state.combo = 0;
   state.stage = state.saveStage;
   goMap("🚩 セーブポイントに戻された……もう一度挑戦だ！");
 }
@@ -465,6 +846,10 @@ function stageClear() {
     state.hp = Math.min(MAX_HP, state.hp + 20);
     msg = "HPが20回復した。次のセーブポイントはまだ先だ……";
   }
+  if (state.items < 3) {
+    state.items++;
+    msg += "<br>🍙 おにぎりを拾った！（クイズ中に使うとHP+30）";
+  }
   state.stage = next;
   $("clear-title").textContent = `STAGE ${clearedStage} クリア！`;
   $("clear-detail").innerHTML = `${state.stageCorrect}/${Q_PER_STAGE} 問正解！<br>${msg}`;
@@ -473,6 +858,7 @@ function stageClear() {
 }
 function ending() {
   clearSave();
+  bgm.play("ending");
   sfx.save();
   setTheme("theme-ending");
   const s = state.stats;
@@ -482,12 +868,14 @@ function ending() {
   if (s.deaths === 0 && s.wrong === 0) title = "👑 伝説の単語マスター（無傷の帰還）";
   else if (s.deaths === 0) title = "🏆 単語マスター";
   else if (s.tHits >= 5) title = "🥊 戸塚のサンドバッグ";
+  else if (s.maxCombo >= 12) title = "🔥 コンボの鬼";
   else if (acc >= 80) title = "⚔️ 歴戦の冒険者";
   else title = "🩹 ボロボロの生還者";
   state.result = { title, acc };
   $("ending-title-badge").textContent = `称号：${title}`;
   $("ending-stats").innerHTML =
     `正解率：${acc}%（${s.correct}/${total}問）<br>` +
+    `🔥 最大コンボ：${s.maxCombo}<br>` +
     `Jから受けた体罰：${s.jHits}回<br>` +
     `戸塚から受けた体罰：${s.tHits}回<br>` +
     `💀 死亡回数：${s.deaths}回`;
@@ -511,7 +899,22 @@ window.addEventListener("DOMContentLoaded", () => {
   $("btn-start-stage").onclick = () => startStage();
   $("btn-clear-next").onclick = () => goMap("");
   $("btn-respawn").onclick = () => respawn();
+  $("btn-item").onclick = () => {
+    if (!state || state.items <= 0 || state.hp >= MAX_HP) return;
+    state.items--;
+    state.hp = Math.min(MAX_HP, state.hp + 30);
+    sfx.heal();
+    updateHud();
+    const pop = $("heal-pop");
+    pop.textContent = "🍙 +30";
+    pop.classList.remove("go");
+    void pop.offsetWidth;
+    pop.classList.add("go");
+  };
   $("btn-ending-title").onclick = () => initTitle();
+  $("btn-bgm").onclick = () => { ensureAudio(); bgm.toggleMute(); };
+  $("hud-bgm").onclick = () => { ensureAudio(); bgm.toggleMute(); };
+  syncBgmButtons();
   $("btn-share").onclick = (e) =>
     shareOrCopy(
       "英単語RPG『Jと戸塚からの体罰を避けろ ～理性は悪なんよ～』\nまちがえるとJと戸塚の体罰が飛んでくる英単語クイズ！",
@@ -521,7 +924,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const s = state.stats;
     const r = state.result || { title: "", acc: 0 };
     shareOrCopy(
-      `『Jと戸塚からの体罰を避けろ』全ステージ制覇！\n称号：${r.title}\n正解率${r.acc}%・体罰${s.jHits + s.tHits}回・死亡${s.deaths}回`,
+      `『Jと戸塚からの体罰を避けろ』魔王・戸塚を討伐！\n称号：${r.title}\n正解率${r.acc}%・最大${s.maxCombo}コンボ・体罰${s.jHits + s.tHits}回・死亡${s.deaths}回`,
       e.currentTarget
     );
   };
