@@ -504,19 +504,18 @@ const HARD_CLEAR_KEY = "tangoQuestHardClearedV1";
 function isExpertUnlocked() {
   try { return localStorage.getItem(HARD_CLEAR_KEY) === "1"; } catch (e) { return false; }
 }
+// ハード（またはエキスパート）クリアで解放。戻り値は「今回はじめて解放されたか」
 function unlockExpertIfEarned() {
-  if (state.diff.key === "hard" || state.diff.key === "expert") {
-    try { localStorage.setItem(HARD_CLEAR_KEY, "1"); } catch (e) {}
-  }
+  if (state.diff.key !== "hard" && state.diff.key !== "expert") return false;
+  if (isExpertUnlocked()) return false;
+  try { localStorage.setItem(HARD_CLEAR_KEY, "1"); } catch (e) {}
+  return true;
 }
+// エキスパートはサプライズ要素。解放前は難易度選択画面に一切表示しない
 function renderDiffScreen() {
   const btn = document.querySelector('.diff-btn[data-diff="expert"]');
   if (!btn) return;
-  const unlocked = isExpertUnlocked();
-  btn.disabled = !unlocked;
-  btn.classList.toggle("locked", !unlocked);
-  const hint = btn.querySelector(".lock-hint");
-  if (hint) hint.classList.toggle("hidden", unlocked);
+  btn.classList.toggle("hidden", !isExpertUnlocked());
 }
 
 // ---------- タイトル ----------
@@ -1024,7 +1023,7 @@ function stageClear() {
 }
 function ending() {
   clearSave();
-  unlockExpertIfEarned();
+  const justUnlockedExpert = unlockExpertIfEarned();
   bgm.play("ending");
   sfx.save();
   setTheme("theme-ending");
@@ -1047,6 +1046,13 @@ function ending() {
     `Jから受けた体罰：${s.jHits}回<br>` +
     `戸塚から受けた体罰：${s.tHits}回<br>` +
     `💀 死亡回数：${s.deaths}回`;
+  const unlockEl = $("ending-unlock");
+  if (justUnlockedExpert) {
+    unlockEl.textContent = "🎉 新たな難易度『エキスパート』が解放された……！";
+    unlockEl.classList.remove("hidden");
+  } else {
+    unlockEl.classList.add("hidden");
+  }
   showScreen("screen-ending");
 }
 

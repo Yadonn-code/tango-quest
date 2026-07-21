@@ -203,8 +203,6 @@ h2 { font-size: 1.6rem; }
 }
 .diff-btn b { font-size: 1.2rem; }
 .diff-btn span { font-size: 0.85rem; color: #d6d3d1; }
-.diff-btn.locked { opacity: 0.45; }
-.diff-btn .lock-hint { color: #fbbf24; }
 
 /* ---------- マップ ---------- */
 #map-path {
@@ -359,6 +357,7 @@ h2 { font-size: 1.6rem; }
 #dead-face { font-size: 5rem; }
 #ending-title-badge { font-size: 1.3rem; color: #fbbf24; }
 #ending-stats { color: #d6d3d1; }
+#ending-unlock { color: #fde047; font-size: 1.05rem; text-shadow: 0 0 10px #fde04788; animation: comboPop 0.4s ease-out; }
 
 /* ---------- パンチ演出 ---------- */
 #punch-overlay {

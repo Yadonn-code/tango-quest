@@ -80,10 +80,9 @@
         <b>🔥 ハード</b>
         <span>J の体罰 -30 ／ 戸塚の体罰 -60<br>🚩 セーブポイント：ステージ 1 のみ（死んだら最初から）<br>⏰ 1問10秒の時間制限！時間切れは体罰！<br>激ムズ単語も混ざる／主人公の攻撃力もひかえめ</span>
       </button>
-      <button class="btn diff-btn" data-diff="expert" disabled>
+      <button class="btn diff-btn hidden" data-diff="expert">
         <b>💀 エキスパート</b>
         <span>J の体罰 -40 ／ 戸塚の体罰 -80<br>🚩 セーブポイントなし（死んだら最初から）<br>⏰ 1問6秒の時間制限！<br>AI級の激ムズ単語が大量出現<br>……クリアの先に、何かがいる。</span>
-        <span class="lock-hint">🔒 ハードをクリアすると挑戦できる</span>
       </button>
     </div>
   </section>
@@ -144,6 +143,7 @@
     <h2>🎉 全ステージ制覇！</h2>
     <p id="ending-title-badge"></p>
     <p id="ending-stats"></p>
+    <p id="ending-unlock" class="hidden"></p>
     <div class="btn-col">
       <button id="btn-share-ending" class="btn">📤 結果をシェア</button>
       <button id="btn-ending-title" class="btn primary">タイトルへもどる</button>
