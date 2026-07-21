@@ -183,8 +183,9 @@ h2 { font-size: 1.6rem; }
   cursor: pointer;
   transition: transform 0.1s, background 0.15s;
 }
-.btn:hover { background: #ffffff28; transform: translateY(-2px); }
+.btn:hover:not(:disabled) { background: #ffffff28; transform: translateY(-2px); }
 .btn:active { transform: translateY(1px); }
+.btn:disabled { cursor: not-allowed; }
 .btn.primary { border-color: #fbbf24; color: #fbbf24; }
 .btn-col {
   display: flex;
@@ -202,6 +203,8 @@ h2 { font-size: 1.6rem; }
 }
 .diff-btn b { font-size: 1.2rem; }
 .diff-btn span { font-size: 0.85rem; color: #d6d3d1; }
+.diff-btn.locked { opacity: 0.45; }
+.diff-btn .lock-hint { color: #fbbf24; }
 
 /* ---------- マップ ---------- */
 #map-path {

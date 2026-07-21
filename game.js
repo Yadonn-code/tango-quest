@@ -14,9 +14,12 @@ const STAGES = [
 ];
 
 const DIFFS = {
-  easy:   { key: "easy",   name: "イージー", jDmg: 10, tDmg: 20, saves: [1, 2, 3, 4, 5] },
-  normal: { key: "normal", name: "ノーマル", jDmg: 15, tDmg: 35, saves: [1, 3, 5] },
-  hard:   { key: "hard",   name: "ハード",   jDmg: 30, tDmg: 60, saves: [1], timeLimit: 10 },
+  easy:   { key: "easy",   name: "イージー",     jDmg: 10, tDmg: 20, saves: [1, 2, 3, 4, 5] },
+  normal: { key: "normal", name: "ノーマル",     jDmg: 15, tDmg: 35, saves: [1, 3, 5] },
+  // ハードは敵の攻撃力が高いだけでなく、主人公の攻撃力も抑えめにして「打たれ弱いのに火力も出ない」難易度にする
+  hard:   { key: "hard",   name: "ハード",       jDmg: 30, tDmg: 60, saves: [1], timeLimit: 10, hardWordsRatio: 0.6, playerDmgMult: 0.65 },
+  // ハードクリアで解放される最高難易度。セーブポイントなし・時間制限も短縮・激ムズ単語がほぼ全問・裏ボス「覚醒J」「菩薩戸塚」が控える
+  expert: { key: "expert", name: "エキスパート", jDmg: 40, tDmg: 80, saves: [], timeLimit: 6, hardWordsRatio: 0.9, playerDmgMult: 0.5, bossOrder: ["j", "totsuka", "jAwaken", "totsukaBosatsu"] },
 };
 
 const FACE_J = `<svg viewBox="0 0 100 100" role="img" aria-label="J">
@@ -48,9 +51,42 @@ const FACE_TOTSUKA = `<svg viewBox="0 0 100 100" role="img" aria-label="戸塚">
   <path d="M79 28 l6 -8 M86 31 l8 -6 M84 20 l4 -8" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
 </svg>`;
 
+// エキスパート限定の裏ボス（覚醒J・菩薩戸塚）の顔。既存デザインをベースに、覚醒のオーラ／菩薩の後光を追加
+const FACE_J_AWAKEN = `<svg viewBox="0 0 100 100" role="img" aria-label="覚醒J">
+  <circle cx="50" cy="52" r="46" fill="none" stroke="#fbbf24" stroke-width="3" opacity="0.85"/>
+  <circle cx="50" cy="52" r="40" fill="none" stroke="#f97316" stroke-width="2" opacity="0.6"/>
+  <path d="M10 20 l6 10 M90 20 l-6 10 M50 2 l0 12" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="50" cy="58" r="33" fill="#f2c9a0"/>
+  <path d="M18 44 a32 24 0 0 1 64 0 z" fill="#1d4ed8"/>
+  <rect x="13" y="42" width="74" height="9" rx="4.5" fill="#facc15"/>
+  <text x="50" y="38" font-size="17" fill="#111" text-anchor="middle" font-weight="bold" font-family="sans-serif">J</text>
+  <rect x="27" y="56" width="19" height="10" rx="3" fill="#fde047"/>
+  <rect x="54" y="56" width="19" height="10" rx="3" fill="#fde047"/>
+  <rect x="46" y="59" width="8" height="3" fill="#111"/>
+  <path d="M38 74 q12 12 24 -2" stroke="#7c2d12" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+</svg>`;
+
+const FACE_TOTSUKA_BOSATSU = `<svg viewBox="0 0 100 100" role="img" aria-label="菩薩戸塚">
+  <circle cx="50" cy="30" r="30" fill="none" stroke="#fde68a" stroke-width="4" opacity="0.9"/>
+  <circle cx="50" cy="60" r="33" fill="#f6d2ae"/>
+  <path d="M17 62 q-3 -18 8 -27 l7 9 z" fill="#fff7ed"/>
+  <path d="M83 62 q3 -18 -8 -27 l-7 9 z" fill="#fff7ed"/>
+  <path d="M15 42 q35 -28 70 0 l-3 6 H18 z" fill="#fef3c7"/>
+  <rect x="15" y="46" width="70" height="9" rx="4" fill="#a16207"/>
+  <text x="50" y="41" font-size="13" text-anchor="middle">☸️</text>
+  <path d="M26 58 l18 7" stroke="#78350f" stroke-width="5" stroke-linecap="round"/>
+  <path d="M74 58 l-18 7" stroke="#78350f" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="37" cy="71" r="8" fill="none" stroke="#78350f" stroke-width="2.5"/>
+  <circle cx="63" cy="71" r="8" fill="none" stroke="#78350f" stroke-width="2.5"/>
+  <line x1="45" y1="71" x2="55" y2="71" stroke="#78350f" stroke-width="2.5"/>
+  <circle cx="37" cy="71" r="2.5" fill="#78350f"/>
+  <circle cx="63" cy="71" r="2.5" fill="#78350f"/>
+  <path d="M38 83 q12 6 24 0 q-12 8 -24 0 z" fill="#fde68a"/>
+</svg>`;
+
 // 自作イラストなど、権利上問題のない画像に差し替えたい場合はファイル名を指定する
 // 例: const CUSTOM_FACES = { j: null, totsuka: "totsuka.png" };
-const CUSTOM_FACES = { j: null, totsuka: null };
+const CUSTOM_FACES = { j: null, totsuka: null, jAwaken: null, totsukaBosatsu: null };
 
 const ATTACKERS = {
   j: {
@@ -166,9 +202,81 @@ const ATTACKERS = {
     bossHitLines: ["戸塚「ぬうっ！？」", "戸塚「効いとらん！効いとらんわ！」", "戸塚「小癪な単語力よ……！」"],
     bossDefeat: "戸塚「わしの負けだわ……お前の脳幹、日本一よ」",
   },
+  // エキスパート限定の裏ボス①：魔王・戸塚が敗れた激情で覚醒したJ
+  jAwaken: {
+    key: "jAwaken", name: "覚醒J", face: FACE_J_AWAKEN, role: "戸塚ヨットスクール 覚醒教官",
+    hitLines: [
+      "覚醒J「校長の分まで、シバいたる……！」",
+      "覚醒J「これが本気の往復ビンタじゃあ！！」",
+      "覚醒J「脳幹、まだ寝とるんか!!」",
+      "覚醒J「もう加減はせん……！」",
+      "覚醒J「校長の教えは俺が継ぐ……！」",
+      "覚醒Jの覚醒ボディーブロー！！",
+      "覚醒J「これが……覚醒の力じゃあ!!」",
+      "覚醒J「泣いても手加減はないぞ!!」",
+    ],
+    lowLines: [
+      "覚醒J「まだ立てるやろ、なぁ!?」",
+      "覚醒J「校長が見とるぞ、根性見せんかい!!」",
+    ],
+    timeoutLines: [
+      "覚醒J「迷っとる暇なんぞ、あると思うなよ!!」",
+      "覚醒J「10秒すら惜しいんじゃ!!」",
+    ],
+    tauntLines: [
+      "覚醒J「……ちっ、やるやんけ」",
+      "覚醒J「悪ないな……だが、まだじゃ!!」",
+    ],
+    deadLines: [
+      "覚醒J「ここまでか……だが、菩薩様はまだ先じゃ」",
+      "覚醒J「セーブポイントで頭冷やしとけ」",
+    ],
+    bossTitle: "真の中ボス",
+    bossHp: 70,
+    bossIntro: "覚醒J「校長がやられて黙っとられるか……！　オレの中の獣、解放するぞォォ！！」",
+    bossHalf: "覚醒J「くっ……この俺に、ここまでとは……！」",
+    bossHitLines: ["覚醒J「ぐあっ……！」", "覚醒J「まだまだぁ!!」", "覚醒J「効いとらんぞ……！」"],
+    bossDefeat: "覚醒J「がはっ……さすが……だが、その先に菩薩様が待っとるぞ……」",
+  },
+  // エキスパート限定の裏ボス②：真の最終ボス。悟りを開いた戸塚
+  totsukaBosatsu: {
+    key: "totsukaBosatsu", name: "菩薩戸塚", face: FACE_TOTSUKA_BOSATSU, role: "戸塚ヨットスクール 菩薩",
+    hitLines: [
+      "菩薩戸塚「怒りすら、教育に変えるんよ……」",
+      "菩薩戸塚「悟った今のワシに、痛みなど概念でしかないわ」",
+      "菩薩戸塚「これが慈悲の鉄拳よ……」",
+      "菩薩戸塚「脳幹どころか、魂から鍛え直したるわ」",
+      "菩薩戸塚「体罰を超えた……これは救済じゃ」",
+      "菩薩戸塚のありがたき往復ビンタ！！",
+      "菩薩戸塚「怒らぬ。ただ、殴るのみ」",
+      "菩薩戸塚「涅槃の境地から言うが、まだ甘いわ」",
+    ],
+    lowLines: [
+      "菩薩戸塚「そのフラフラも、悟りへの一歩よ」",
+      "菩薩戸塚「限界の先にこそ、脳幹の真理があるわ」",
+    ],
+    timeoutLines: [
+      "菩薩戸塚「迷いは煩悩、即答こそ悟りよ」",
+      "菩薩戸塚「10秒すら惜しい、それが修行なんよ」",
+    ],
+    tauntLines: [
+      "菩薩戸塚「ほう……悟りに近づいたか」",
+      "菩薩戸塚「その正解、功徳として認めたる」",
+    ],
+    deadLines: [
+      "菩薩戸塚「気絶もまた、悟りへの通過点なんよ」",
+      "菩薩戸塚「目覚めたら、また一から鍛え直したる」",
+    ],
+    bossTitle: "真の裏ボス",
+    bossHp: 130,
+    bossIntro: "菩薩戸塚「ようここまで来たわ……じゃがワシは、もう魔王ではない。悟りを開いた菩薩戸塚じゃ」",
+    bossHalf: "菩薩戸塚「ほう……その脳幹、悟りに片足突っ込んどるな」",
+    bossHitLines: ["菩薩戸塚「ぬぐっ……！」", "菩薩戸塚「まだ悟りには早いようじゃな……！」", "菩薩戸塚「小癪な……功徳よ……！」"],
+    bossDefeat: "菩薩戸塚「わしの負けだわ……お前の脳幹、もはや解脱しとるわ……」",
+  },
 };
 
-// ボス戦の出現順（中ボスJ → 魔王・戸塚）
+// ボス戦の出現順（通常は中ボスJ → 魔王・戸塚。エキスパートは DIFFS.expert.bossOrder で上書きされる）
 const BOSS_ORDER = ["j", "totsuka"];
 // プレイヤーの攻撃名（正解時にランダムで表示）
 const PLAYER_ATTACKS = ["📖 単語の一撃！", "📖 ボキャブラリーアタック！", "✏️ シス単スラッシュ！"];
@@ -391,6 +499,26 @@ function clearSave() {
   try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
 }
 
+// ---------- エキスパート解放（ハードクリアで解放） ----------
+const HARD_CLEAR_KEY = "tangoQuestHardClearedV1";
+function isExpertUnlocked() {
+  try { return localStorage.getItem(HARD_CLEAR_KEY) === "1"; } catch (e) { return false; }
+}
+function unlockExpertIfEarned() {
+  if (state.diff.key === "hard" || state.diff.key === "expert") {
+    try { localStorage.setItem(HARD_CLEAR_KEY, "1"); } catch (e) {}
+  }
+}
+function renderDiffScreen() {
+  const btn = document.querySelector('.diff-btn[data-diff="expert"]');
+  if (!btn) return;
+  const unlocked = isExpertUnlocked();
+  btn.disabled = !unlocked;
+  btn.classList.toggle("locked", !unlocked);
+  const hint = btn.querySelector(".lock-hint");
+  if (hint) hint.classList.toggle("hidden", unlocked);
+}
+
 // ---------- タイトル ----------
 function initTitle() {
   setTheme("theme-title");
@@ -408,12 +536,15 @@ function initTitle() {
 
 // ---------- ゲーム開始 ----------
 function startGame(diffKey, startStageNo) {
+  const diff = DIFFS[diffKey];
   state = {
-    diff: DIFFS[diffKey],
+    diff,
+    bossOrder: diff.bossOrder || BOSS_ORDER,
     stage: startStageNo,
     saveStage: startStageNo,
     hp: MAX_HP,
     used: new Set(),
+    usedHard: new Set(),
     qs: [],
     qi: 0,
     stageCorrect: 0,
@@ -483,7 +614,7 @@ function startStage() {
 
 // ---------- ボス戦（最終ステージ） ----------
 function startBossBattle(idx, msg) {
-  const atk = ATTACKERS[BOSS_ORDER[idx]];
+  const atk = ATTACKERS[state.bossOrder[idx]];
   state.boss = { idx, atk, hp: atk.bossHp, max: atk.bossHp, halfShown: false };
   $("enemies").classList.add("hidden");
   $("boss-wrap").classList.remove("hidden");
@@ -524,18 +655,36 @@ function showCutscene(atk, line, ms, cb) {
     if (cb) cb();
   }, ms);
 }
-function makeQuestions() {
-  let pool = WORDS.filter((w) => !state.used.has(w.en));
-  if (pool.length < Q_PER_STAGE) {
-    state.used.clear();
-    pool = [...WORDS];
+// 指定プールから使用済みを避けて n 個選ぶ。プールを使い切ったらそのプールだけ使用済みをリセット
+function pickFromPool(list, usedSet, n) {
+  let avail = list.filter((w) => !usedSet.has(w.en));
+  if (avail.length < n) {
+    usedSet.clear();
+    avail = [...list];
   }
-  const picked = shuffle(pool).slice(0, Q_PER_STAGE);
-  picked.forEach((w) => state.used.add(w.en));
+  const picked = shuffle(avail).slice(0, n);
+  picked.forEach((w) => usedSet.add(w.en));
+  return picked;
+}
+function makeQuestions() {
+  const ratio = state.diff.hardWordsRatio || 0;
+  let picked;
+  if (ratio > 0) {
+    // ハード／エキスパートは HARD_WORDS（激ムズ語彙）を難易度に応じた比率で混ぜる
+    const hardCount = Math.min(HARD_WORDS.length, Math.round(Q_PER_STAGE * ratio));
+    const normalCount = Q_PER_STAGE - hardCount;
+    picked = shuffle([
+      ...pickFromPool(HARD_WORDS, state.usedHard, hardCount),
+      ...pickFromPool(WORDS, state.used, normalCount),
+    ]);
+  } else {
+    picked = pickFromPool(WORDS, state.used, Q_PER_STAGE);
+  }
+  const wrongPool = ratio > 0 ? WORDS.concat(HARD_WORDS) : WORDS;
   return picked.map((w) => {
     // 意味（ja）が同じ単語が複数あるため、選択肢の文字列が重複しないように選ぶ
     const wrongs = [];
-    for (const x of shuffle(WORDS)) {
+    for (const x of shuffle(wrongPool)) {
       if (x.ja !== w.ja && !wrongs.includes(x.ja)) wrongs.push(x.ja);
       if (wrongs.length === 3) break;
     }
@@ -697,6 +846,8 @@ function playerAttack() {
   let dmg = 10 + 2 * Math.min(state.combo, 5);
   const crit = state.combo >= 5;
   if (crit) dmg = Math.round(dmg * 1.5);
+  // ハード／エキスパートは主人公の攻撃力も抑えめにして、被弾しやすいだけでなく削り切りにくい難易度にする
+  dmg = Math.max(1, Math.round(dmg * (state.diff.playerDmgMult || 1)));
   b.hp = Math.max(0, b.hp - dmg);
 
   const ov = $("punch-overlay");
@@ -748,7 +899,7 @@ function bossDefeated() {
   sfx.bossDown();
   const beaten = state.boss.atk;
   const nextIdx = state.boss.idx + 1;
-  if (nextIdx < BOSS_ORDER.length) {
+  if (nextIdx < state.bossOrder.length) {
     state.hp = Math.min(MAX_HP, state.hp + 30);
     startBossBattle(nextIdx, `⚔️ ${beaten.name}を倒した！気合いでHPが30回復！`);
   } else {
@@ -759,9 +910,9 @@ function bossDefeated() {
 
 // ---------- パンチ演出 ----------
 function doPunch(reason) {
-  // ボス戦中は今戦っているボスが殴ってくる。通常はランダム
-  const isJ = state.boss ? state.boss.atk.key === "j" : Math.random() < 0.65;
-  const atk = isJ ? ATTACKERS.j : ATTACKERS.totsuka;
+  // ボス戦中は今戦っているボス（覚醒J・菩薩戸塚も含む）が殴ってくる。通常はランダム
+  const atk = state.boss ? state.boss.atk : (Math.random() < 0.65 ? ATTACKERS.j : ATTACKERS.totsuka);
+  const isJ = atk.key === "j" || atk.key === "jAwaken";
   const dmg = isJ ? state.diff.jDmg : state.diff.tDmg;
   if (isJ) state.stats.jHits++;
   else state.stats.tHits++;
@@ -774,7 +925,7 @@ function doPunch(reason) {
   else line = pick(atk.hitLines);
 
   const ov = $("punch-overlay");
-  setAttackerBanner(isJ ? "atk-j" : "atk-t", isJ ? "😎 Jのこうげき！" : "👹 戸塚のこうげき！");
+  setAttackerBanner(isJ ? "atk-j" : "atk-t", `${isJ ? "😎" : "👹"} ${atk.name}のこうげき！`);
   $("punch-face").innerHTML = faceHTML(atk);
   $("punch-role").textContent = state.boss ? `${atk.bossTitle}・${atk.name}` : atk.role;
   $("punch-name").textContent = line;
@@ -873,6 +1024,7 @@ function stageClear() {
 }
 function ending() {
   clearSave();
+  unlockExpertIfEarned();
   bgm.play("ending");
   sfx.save();
   setTheme("theme-ending");
@@ -880,7 +1032,8 @@ function ending() {
   const total = s.correct + s.wrong;
   const acc = total ? Math.round((s.correct / total) * 100) : 0;
   let title;
-  if (s.deaths === 0 && s.wrong === 0) title = "👑 伝説の単語マスター（無傷の帰還）";
+  if (state.diff.key === "expert") title = "🌌 真の単語神（覚醒J・菩薩戸塚を撃破）";
+  else if (s.deaths === 0 && s.wrong === 0) title = "👑 伝説の単語マスター（無傷の帰還）";
   else if (s.deaths === 0) title = "🏆 単語マスター";
   else if (s.tHits >= 5) title = "🥊 戸塚のサンドバッグ";
   else if (s.maxCombo >= 12) title = "🔥 コンボの鬼";
@@ -904,7 +1057,7 @@ window.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("[data-face]").forEach((el) => {
     el.innerHTML = faceHTML(ATTACKERS[el.dataset.face]);
   });
-  $("btn-new").onclick = () => { ensureAudio(); showScreen("screen-diff"); };
+  $("btn-new").onclick = () => { ensureAudio(); renderDiffScreen(); showScreen("screen-diff"); };
   $("btn-continue").onclick = () => {
     ensureAudio();
     const s = readSave();
@@ -932,6 +1085,7 @@ window.addEventListener("DOMContentLoaded", () => {
   $("btn-bgm").onclick = () => { ensureAudio(); bgm.toggleMute(); };
   $("hud-bgm").onclick = () => { ensureAudio(); bgm.toggleMute(); };
   syncBgmButtons();
+  renderDiffScreen();
   $("btn-share").onclick = (e) =>
     shareOrCopy(
       "英単語RPG『Jと戸塚からの体罰を避けろ ～理性は悪なんよ～』\nまちがえるとJと戸塚の体罰が飛んでくる英単語クイズ！",
